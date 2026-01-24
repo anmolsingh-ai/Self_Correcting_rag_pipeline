@@ -1,0 +1,12 @@
+langchain
+langchain-community
+langchain-core
+langchain-text-splitters
+langchain-google-genai
+python-dotenv
+datasets
+ragas
+rank_bm25
+numpy
+pydantic
+langchain-classic

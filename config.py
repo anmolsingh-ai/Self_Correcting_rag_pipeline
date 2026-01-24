@@ -1,0 +1,10 @@
+DATA_DIR = "data"
+PERSIST_DIR = "chroma_db"
+CHUNK_SIZE = 500
+CHUNK_OVERLAP = 50
+
+EMBEDDING_MODEL = "models/embedding-001"
+LLM_MODEL = "gemini-2.5-flash"
+
+RETRIEVER_K = 6
+GRADE_THRESHOLD = 7.5
