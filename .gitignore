@@ -5,7 +5,7 @@ __pycache__/
 
 # Virtual environment
 venv/
-env/
+.env/
 *.venv
 
 # Data folder (optional, if you don't want docs pushed)
