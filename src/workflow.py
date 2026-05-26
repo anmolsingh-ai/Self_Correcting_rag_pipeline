@@ -1,6 +1,6 @@
 from ingestion_pipeline import load_and_split_data
 from embedding_pipeline import get_embedding_model
-from vectorstore_manager import load_existing_vectorstore
+from vectorstore_manager import create_vectorstore,load_existing_vectorstore
 from retriever import get_retriever
 from grader import grade_documents
 from query_rewriter import rewrite_query
@@ -22,7 +22,7 @@ embeddings = get_embedding_model()
 
 
 # STEP 3: Vector DB
-load_existing_vectorstore( embeddings)
+create_vectorstore(chunks, embeddings)
 
 
 # STEP 4: Retriever
