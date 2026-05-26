@@ -1,16 +1,24 @@
+import os
+import time
+
 from ingestion_pipeline import load_and_split_data
 from embedding_pipeline import get_embedding_model
+
 from vectorstore_manager import create_vectorstore,load_existing_vectorstore
 from retriever import get_retriever
 from grader import grade_documents
 from query_rewriter import rewrite_query
 from generator import generate_answer
-import os
+
 from reflection_engine import reflect_answer
 from dotenv import load_dotenv
 load_dotenv() 
+
+
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "Notes.pdf"))
 
+
+start_time = time.time()
 
 
 # STEP 1: Load Data
@@ -31,10 +39,13 @@ retriever = get_retriever(embeddings)
 # STEP 5: User Question
 question = "What is self correcting RAG?"
 
+retrieval_start = time.time()
 
 # STEP 6: Retrieve Documents
 docs = retriever.invoke(question)
 
+retrieval_end = time.time()
+print(f"Retrieval Time: {retrieval_end - retrieval_start:.2f} sec")
 
 # STEP 7: Grade Documents
 graded_docs = grade_documents(question, docs)
@@ -79,3 +90,8 @@ if "NO" in reflection.upper():
     answer = generate_answer(question, graded_docs)
 
     print(answer)
+
+end_time = time.time()
+
+# TOTAL INFERENCE TIME
+print(f"\nTotal Inference Time: {end_time - start_time:.2f} seconds")

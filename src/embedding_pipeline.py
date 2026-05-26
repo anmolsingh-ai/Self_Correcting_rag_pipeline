@@ -1,12 +1,11 @@
 import os
-
-from dotenv import load_dotenv
-load_dotenv() 
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+ 
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 def get_embedding_model():
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/gemini-embedding-2"
+
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
     return embeddings
