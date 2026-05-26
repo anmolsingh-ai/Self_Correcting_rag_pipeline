@@ -7,7 +7,8 @@ from query_rewriter import rewrite_query
 from generator import generate_answer
 import os
 from reflection_engine import reflect_answer
-
+from dotenv import load_dotenv
+load_dotenv() 
 DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "Notes.pdf"))
 
 
