@@ -22,7 +22,7 @@ embeddings = get_embedding_model()
 
 
 # STEP 3: Vector DB
-load_existing_vectorstore(chunks, embeddings)
+load_existing_vectorstore( embeddings)
 
 
 # STEP 4: Retriever
