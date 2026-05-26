@@ -1,0 +1,9 @@
+langchain
+faiss-cpu
+langchain-community
+fastapi
+uvicorn
+pypdf
+python-dotenv
+langchain-google-genai
+langchain-text-splitters

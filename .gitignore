@@ -1,0 +1,5 @@
+venv
+notebook.ipynb
+.env
+__pycache__
+*.pyc
