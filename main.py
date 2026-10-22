@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 from src.load_data import load_and_chunk_pdf
 from src.vectore_store import create_vector_store
-from src.document_grading import create_grading_chain
 from src.hybrid_retriver import create_hybrid_retriever
+from src.reranker import create_reranked_retriever
 from src.conversational_chain import create_conversational_rag_chain
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -25,12 +25,12 @@ def main(pdf_path: str):
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
     print("✓ LLM initialized")
     
-    # 4. Create grading chain
-    grading_chain = create_grading_chain(llm)
+    #create hybrid retriever
+    hybrid = create_hybrid_retriever(chunks, vector_store, k=10)
     
-    # 5. Create hybrid retriever
-    retriever = create_hybrid_retriever(chunks, vector_store, llm, grading_chain)
-    
+    #create a reranker retriever
+    retriever = create_reranked_retriever(hybrid, top_n=4)
+
     # 6. Create conversational RAG chain
     rag_chain, message_store = create_conversational_rag_chain(retriever, llm)
     
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         # Example query
         print("Testing RAG chain...")
         response = rag_chain.invoke(
-            {"input": "What is the main topic of this document?"},
+            {"input": "What is the weights and bias in machine learning?"},
             config={"configurable": {"session_id": "test"}}
         )
         print(f"\nResponse: {response}\n")

@@ -1,6 +1,48 @@
-venv
-notebook.ipynb
+
+# Environment variables and API keys
 .env
-__pycache__
-*.pyc
-chroma_db
+.env.*
+!.env.example
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.deepeval/
+.deepeval
+
+# Logs
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Model weights and downloaded models
+models/
+*.gguf
+*.safetensors
+*.pt
+*.pth
+*.bin
+
+# Local databases and vector stores
+chroma_db/
+faiss_index/

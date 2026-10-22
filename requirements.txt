@@ -12,3 +12,5 @@ sentence-transformers
 langchain-huggingface
 ragas
 datasets
+langsmith
+deepeval

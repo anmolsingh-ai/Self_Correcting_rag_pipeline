@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "query": "What is the formal definition of machine learning in terms of experience, task and performance measure?",
+    "ideal_answer": "A computer program is said to learn from experience E with respect to some task T and performance measure P if its performance on T, as measured by P, improves with experience E. The notes also describe ML more informally as the science (and art) of programming computers so they can learn from data, or the field of study that gives computers the ability to learn without being explicitly programmed.",
+    "source": "Notes.pdf, Module I, p. 1"
+  },
+  {
+    "id": 2,
+    "query": "What's the difference between batch learning and online learning, and when is online learning the better choice?",
+    "ideal_answer": "In batch (offline) learning the system cannot learn incrementally: it is trained on all the available data, then launched into production where it only applies what it has learned. Its drawbacks are the need to load the whole dataset into memory, heavy hardware requirements, and the fact that the full dataset may not always be available. In online learning, data is fed sequentially in small mini-batches and the model improves after each batch, even while in production. Online learning is a good fit for continuous data flows (e.g. stock prices), for rapid adaptation to change, and for limited computing resources, since instances can be discarded after learning. The learning rate controls how fast it adapts: a high rate adapts quickly but forgets old data, while a low rate has more inertia and is less sensitive to noise. A major risk is that bad data gradually degrades performance.",
+    "source": "Notes.pdf, Module I, pp. 10-11"
+  },
+  {
+    "id": 3,
+    "query": "How does the Find-S algorithm treat negative examples, and what hypothesis does it end up with on the EnjoySport data?",
+    "ideal_answer": "Find-S starts with the most specific hypothesis and generalizes it using only the positive training examples. Negative examples are ignored and leave the hypothesis unchanged. Attributes that vary among positive examples are replaced with '?'. On the EnjoySport dataset (three positive examples and one negative), the final hypothesis is <Sunny, Warm, ?, Strong, ?, ?>.",
+    "source": "Notes.pdf, Module I, pp. 25-26"
+  },
+  {
+    "id": 4,
+    "query": "In the Candidate Elimination algorithm, what are the general boundary G and specific boundary S, and what is S after the four EnjoySport examples?",
+    "ideal_answer": "The general boundary G is the set of maximally general members of the hypothesis space H that are consistent with the training data D. The specific boundary S is the set of minimally general (maximally specific) members of H consistent with D. Together they represent the version space. After processing all four EnjoySport examples, S4 = <Sunny, Warm, ?, Strong, ?, ?>.",
+    "source": "Notes.pdf, Module I, pp. 28-29"
+  },
+  {
+    "id": 5,
+    "query": "When should I optimize for recall instead of precision? Can you give a real-world example?",
+    "ideal_answer": "Optimize for recall when the cost of false positives is low and the value of true positives is high. Example: scoring customers likely to buy a product for a call center that can only contact a few hundred people. A wasted call is cheap, but every real buyer is valuable, so you use a lower decision threshold and accept low precision. By contrast, for a 'fast delivery' label in a food delivery app you would optimize for precision (higher threshold), because false positives damage customer trust, while false negatives have no real consequence.",
+    "source": "Notes.pdf, Module II, pp. 47-48"
+  },
+  {
+    "id": 6,
+    "query": "What does AUC measure and why is it considered a useful metric?",
+    "ideal_answer": "AUC is the area under the ROC curve (which plots true positive rate against false positive rate) from (0,0) to (1,1). It gives an aggregate measure of performance across all possible classification thresholds, and can be interpreted as the probability that the model ranks a random positive example above a random negative one. It is useful because it is scale-invariant (it measures how well predictions are ranked, not their absolute values) and classification-threshold-invariant (it does not depend on the chosen threshold).",
+    "source": "Notes.pdf, Module II, pp. 49-50"
+  },
+  {
+    "id": 7,
+    "query": "I have a 10-class problem and want to use an SVM with the one-vs-one strategy. How many binary classifiers will I need to train?",
+    "ideal_answer": "One-vs-One trains one binary classifier for every pair of classes, so the number of models is N * (N - 1) / 2. For 10 classes that is 10 * 9 / 2 = 45 classifiers. (One-vs-Rest would need only 10, one per class.) The notes say OvO is classically suggested for SVMs and other kernel methods because they do not scale well with training set size, so training each classifier on a subset of the data helps.",
+    "source": "Notes.pdf, Module II, pp. 51-52"
+  },
+  {
+    "id": 8,
+    "query": "What happens in gradient descent if the learning rate is too small or too large?",
+    "ideal_answer": "If the learning rate is too small, the algorithm needs many iterations to converge, which takes a long time. If it is too high, the algorithm may jump across the valley and land higher up than before, which can make it diverge with larger and larger values and fail to find a good solution.",
+    "source": "Notes.pdf, Module III, p. 57"
+  },
+  {
+    "id": 9,
+    "query": "What is the difference between Ridge and Lasso regression?",
+    "ideal_answer": "Both are regularization techniques that add a penalty term to the cost function to reduce model complexity. Ridge regression (L2 regularization) multiplies lambda by the squared weights and can only shrink coefficients close to zero. Lasso regression (Least Absolute and Selection Operator, L1 regularization) penalizes the absolute values of the weights, so it can shrink a slope all the way to exactly zero. Elastic Net combines both penalties.",
+    "source": "Notes.pdf, Module III, pp. 64-65"
+  },
+  {
+    "id": 10,
+    "query": "How do Gini impurity and entropy differ as impurity measures in decision trees?",
+    "ideal_answer": "Gini impurity is the probability of misclassifying a randomly chosen element in a set. It ranges from 0 (perfect purity) to 1 (maximum impurity), is a linear measure, and can be read as the expected error rate of a classifier. Entropy measures the amount of uncertainty or randomness in a set, ranges from 0 to log(c) where c is the number of classes, is a logarithmic measure, and can be read as the average information needed to specify the class of an instance. Entropy is computed as H = -sum(p * log2(p)).",
+    "source": "Notes.pdf, Module IV, p. 73"
+  },
+  {
+    "id": 11,
+    "query": "What is the difference between hard voting and soft voting in a voting classifier?",
+    "ideal_answer": "In hard voting, the final prediction is the class that gets the majority of votes from the individual classifiers; for example, predictions (Cat, Dog, Dog) give Dog. In soft voting, the predicted class probabilities are averaged and the class with the highest average probability wins; for example, dog probabilities (0.30, 0.47, 0.53) average 0.4333 versus cat (0.20, 0.32, 0.40) at 0.3067, so the prediction is Dog.",
+    "source": "Notes.pdf, Module IV, p. 76"
+  },
+  {
+    "id": 12,
+    "query": "What are out-of-bag instances in bagging and how can they be used to evaluate the ensemble?",
+    "ideal_answer": "With bagging, each predictor samples m training instances with replacement, so on average only about 63% of the training instances are sampled for each predictor. The remaining roughly 37% are called out-of-bag (oob) instances. Because a predictor never sees its oob instances during training, it can be evaluated on them without a separate validation set, and the ensemble is evaluated by averaging these oob evaluations. In Scikit-Learn you set oob_score=True on BaggingClassifier and read the result from oob_score_.",
+    "source": "Notes.pdf, Module IV, p. 79"
+  },
+  {
+    "id": 13,
+    "query": "How is MAP estimation different from maximum likelihood estimation?",
+    "ideal_answer": "Maximum likelihood estimation (MLE) estimates parameters by maximizing the likelihood function without considering any prior distribution. MAP (Maximum a Posteriori) estimation is an extension of MLE that also incorporates a prior distribution reflecting existing beliefs about the parameters. The prior is combined with the likelihood of the observed data to produce a posterior distribution, which represents the updated beliefs after seeing the data.",
+    "source": "Notes.pdf, Module V, p. 87"
+  },
+  {
+    "id": 14,
+    "query": "What is a Bayesian belief network and what are its main components?",
+    "ideal_answer": "A Bayesian network (also called a Bayes network, belief network, decision network or Bayesian model) is a probabilistic graphical model that represents a set of variables and their conditional dependencies using a directed acyclic graph. It consists of two parts: a directed acyclic graph of nodes and arcs, and a table of conditional probabilities. It is used for prediction, anomaly detection, diagnostics, reasoning, time series prediction and decision making under uncertainty.",
+    "source": "Notes.pdf, Module V, p. 97"
+  },
+  {
+    "id": 15,
+    "query": "How does the EM algorithm work and where is it applied?",
+    "ideal_answer": "The EM algorithm estimates missing data of latent variables from the observed data and then uses it to update the parameters. It proceeds in steps: initialization, then an Expectation step (E-step) that estimates all missing values, then a Maximization step (M-step) that uses those estimates to update the parameters, repeating the E and M steps until the values converge. Applications include data clustering, computer vision, NLP, and estimating parameters of mixture models such as the Gaussian Mixture Model and in quantitative genetics.",
+    "source": "Notes.pdf, Module V, pp. 101-102"
+  }
+]
