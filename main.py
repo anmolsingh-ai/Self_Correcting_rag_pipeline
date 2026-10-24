@@ -1,59 +1,79 @@
 import os
 from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
 from src.load_data import load_and_chunk_pdf
 from src.vectore_store import create_vector_store
 from src.hybrid_retriver import create_hybrid_retriever
 from src.reranker import create_reranked_retriever
 from src.conversational_chain import create_conversational_rag_chain
 
-from langchain_google_genai import ChatGoogleGenerativeAI
 
+def build_pipeline(pdf_path: str):
+    """Build the conversational RAG chain for a PDF."""
+    load_dotenv()
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not found. Add it to your .env file.")
 
-def main(pdf_path: str):
-    """Main pipeline"""
-    load_dotenv()  # Load environment variables from .env file
-    print("🚀 Starting Self-Correcting RAG Pipeline...\n")
-    
-    # 1. Load and chunk documents
+    print("📄 Loading and chunking PDF...")
     chunks = load_and_chunk_pdf(pdf_path)
-    
-    # 2. Create vector store
-    vector_store, embeddings = create_vector_store(chunks)
-    
-    # 3. Setup LLM
-    os.environ["GEMINI_API_KEY"] = os.getenv("GEMINI_API_KEY", "")
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
-    print("✓ LLM initialized")
-    
-    #create hybrid retriever
+    if not chunks:
+        raise ValueError("No document chunks were created from the PDF.")
+    print(f"✓ Created {len(chunks)} chunks")
+
+    print("🗄️ Building retrieval pipeline...")
+    vector_store, _ = create_vector_store(chunks)
     hybrid = create_hybrid_retriever(chunks, vector_store, k=10)
-    
-    #create a reranker retriever
     retriever = create_reranked_retriever(hybrid, top_n=4)
 
-    # 6. Create conversational RAG chain
-    rag_chain, message_store = create_conversational_rag_chain(retriever, llm)
-    
-    print("\n✅ Pipeline ready!\n")
-    
-    return rag_chain, message_store, vector_store
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash", google_api_key=api_key, temperature=0
+    )
+    rag_chain, _ = create_conversational_rag_chain(retriever, llm)
+    print("✅ Pipeline ready!\n")
+    return rag_chain
+
+
+def chat(rag_chain):
+    """Interactive terminal chat."""
+    session = 0
+    print("🤖 CONVERSATIONAL RAG CHATBOT")
+    print("Commands: 'exit'/'quit' to stop, 'clear' to start a new conversation.\n")
+
+    while True:
+        try:
+            question = input("You: ")
+            if not question:
+                continue
+            if question.lower() in {"exit", "quit"}:
+                print("👋 Goodbye!")
+                break
+            if question.lower() == "clear":
+                session += 1
+                print("🧹 Started a new conversation.\n")
+                continue
+
+            response = rag_chain.invoke(
+                {"input": question},
+                config={"configurable": {"session_id": f"terminal_{session}"}},
+            )
+            print(f"\nAssistant: {response}\n")
+
+        except KeyboardInterrupt:
+            print("\n👋 Chat interrupted. Goodbye!")
+            break
+        except Exception as e:
+            print(f"\n❌ Error: {e}\nTry asking again.\n")
 
 
 if __name__ == "__main__":
-    # Example usage
     pdf_path = os.path.join(os.getcwd(), "data", "Notes.pdf")
-    
-    if os.path.exists(pdf_path):
-        rag_chain, store, vector_store = main(pdf_path)
-        
-        # Example query
-        print("Testing RAG chain...")
-        response = rag_chain.invoke(
-            {"input": "What is the weights and bias in machine learning?"},
-            config={"configurable": {"session_id": "test"}}
-        )
-        print(f"\nResponse: {response}\n")
-        
+
+    if not os.path.isfile(pdf_path):
+        print(f"⚠️ PDF not found: {pdf_path}\nPlace Notes.pdf in the data folder.")
     else:
-        print(f"⚠️  PDF not found at {pdf_path}")
-        print("Please adjust the path or upload your PDF to the data folder.")
+        try:
+            chat(build_pipeline(pdf_path))
+        except Exception as e:
+            print(f"❌ Failed to start the RAG pipeline: {e}")

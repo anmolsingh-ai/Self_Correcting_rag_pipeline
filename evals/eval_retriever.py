@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 GOLDEN_PATH = ROOT / "goldens" / "retriever_golden.json"
 PDF_PATH = ROOT / "data" / "Notes.pdf"
 
-JUDGE_MODEL = "gemini-2.5-flash"
+JUDGE_MODEL = "gemini-3.8-flash"
 THRESHOLD = 0.7
 
 # Golden questions
