@@ -23,6 +23,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from langsmith import traceable
 
 # How many recent messages (human + AI) the rewriter is allowed to see.
 MAX_HISTORY_MESSAGES = 6
@@ -74,19 +75,16 @@ def build_generator(llm):
         (
             "system",
             "You are a helpful AI assistant.\n"
-            "Answer the question using the retrieved context. "
+            "Answer the question using the retrieved context only. "
             "If the context does not contain the answer, "
-            "say no instead of guessing.\n\n"
+            "say I have not proper context instead of guessing.\n\n"
             "Context:\n{context}",
         ),
         ("human", "{standalone_question}"),
     ])
     return prompt | llm | StrOutputParser()
 
-
-# --------------------------------------------------------------------------
-# Full chain
-# --------------------------------------------------------------------------
+@traceable(name="create conversational rag chain")
 def create_conversational_rag_chain(retriever, llm):
     """
     Returns (conversational_rag_chain, store).

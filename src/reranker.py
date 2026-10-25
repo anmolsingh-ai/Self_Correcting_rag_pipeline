@@ -4,6 +4,8 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from pydantic import ConfigDict
 from sentence_transformers import CrossEncoder
+from langsmith import traceable
+
 
 
 class RerankedRetriever(BaseRetriever):
@@ -23,7 +25,7 @@ class RerankedRetriever(BaseRetriever):
         ranked = sorted(zip(docs, scores), key=lambda pair: pair[1], reverse=True)
         return [doc for doc, _ in ranked[: self.top_n]]
 
-
+@traceable(name="create reranked retriever")
 def create_reranked_retriever(
     base_retriever: BaseRetriever,
     top_n: int = 4,

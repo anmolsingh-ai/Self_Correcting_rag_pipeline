@@ -4,6 +4,8 @@ from datetime import datetime
 from pathlib import Path
 
 from deepeval import evaluate
+from deepeval.evaluate import AsyncConfig
+
 
 RESULTS_FILE = Path(__file__).parent / "results" / "eval_summary.csv"
 FIELDS = ["run_id", "eval_name", "label", "metric",
@@ -57,6 +59,14 @@ def save_run(result, eval_name, label, file=RESULTS_FILE):
 
 def run_and_save(test_cases, metrics, eval_name, label):
     """Runs the evaluation and saves the summary in one step."""
-    result = evaluate(test_cases=test_cases, metrics=metrics)
+    result = evaluate(
+        test_cases=test_cases,
+        metrics=metrics,
+        async_config=AsyncConfig(
+            run_async=True,
+            max_concurrent=3,    # only 3 questions at a time
+            throttle_value=2,    # wait 2 seconds between test cases
+        ),
+    )
     save_run(result, eval_name, label)
     return result

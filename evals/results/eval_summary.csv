@@ -1,0 +1,4 @@
+run_id,eval_name,label,metric,avg_score,pass_rate_pct,passed,failed,total
+2026-10-25 02:08:25,pipeline,baseline,Faithfulness,1.0,100.0,15,0,15
+2026-10-25 02:08:25,pipeline,baseline,Answer Relevancy,1.0,100.0,15,0,15
+2026-10-25 02:08:25,pipeline,baseline,Contextual Relevancy,0.42,6.67,1,14,15

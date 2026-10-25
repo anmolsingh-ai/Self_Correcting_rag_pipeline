@@ -1,10 +1,11 @@
 from typing import List
+from langsmith import traceable
 
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 
-
+@traceable(name="create vector store")
 def create_vector_store(
     chunks: List[Document],
     persist_directory: str = "chroma_db",

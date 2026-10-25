@@ -4,6 +4,8 @@ from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from pydantic import ConfigDict
+from langsmith import traceable
+
 
 
 class SimpleHybridRetriever(BaseRetriever):
@@ -22,7 +24,7 @@ class SimpleHybridRetriever(BaseRetriever):
                 combined.append(doc)
         return combined  # no cutoff here: the reranker picks the final chunks
 
-
+@traceable(name="create hybrid retriever")
 def create_hybrid_retriever(
     chunks: List[Document], vector_store, k: int = 10
 ) -> SimpleHybridRetriever:

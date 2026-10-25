@@ -1,12 +1,13 @@
 import os
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.documents import Document
+from langsmith import traceable
+
 
 
 pdf_path = os.path.join(os.getcwd(), "data", "Notes.pdf")
 
-
+@traceable(name="load and chunk pdf")
 def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 600, chunk_overlap: int = 100):
     """Load PDF and split into chunks"""
     loader = PyMuPDFLoader(pdf_path)

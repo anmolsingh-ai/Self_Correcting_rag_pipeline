@@ -7,9 +7,9 @@ from src.vectore_store import create_vector_store
 from src.hybrid_retriver import create_hybrid_retriever
 from src.reranker import create_reranked_retriever
 from src.conversational_chain import create_conversational_rag_chain
+from langsmith import traceable
 
-
-def build_pipeline(pdf_path: str):
+def build_pipeline(pdf_path: str, return_retriever: bool = False):
     """Build the conversational RAG chain for a PDF."""
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
@@ -32,6 +32,8 @@ def build_pipeline(pdf_path: str):
     )
     rag_chain, _ = create_conversational_rag_chain(retriever, llm)
     print("✅ Pipeline ready!\n")
+    if return_retriever:
+        return rag_chain, retriever
     return rag_chain
 
 
@@ -74,6 +76,6 @@ if __name__ == "__main__":
         print(f"⚠️ PDF not found: {pdf_path}\nPlace Notes.pdf in the data folder.")
     else:
         try:
-            chat(build_pipeline(pdf_path))
+            chat(build_pipeline(pdf_path,return_retriever=True))
         except Exception as e:
             print(f"❌ Failed to start the RAG pipeline: {e}")
