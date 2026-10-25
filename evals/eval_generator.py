@@ -23,7 +23,6 @@ PDF_PATH = ROOT / "data" / "Notes.pdf"
 JUDGE_MODEL = "gemini-2.5-flash"
 THRESHOLD = 0.7
 
-# Golden questions
 with open(GOLDEN_PATH, encoding="utf-8") as f:
     golden_data = json.load(f)
 
@@ -36,22 +35,22 @@ test_cases = []
 
 
 for g in golden_data:
-    ideal = g["ideal_context"]                       # no trailing comma
-    context_list = ideal if isinstance(ideal, list) else [ideal]   # list of strings for DeepEval
-    context_str = "\n\n".join(context_list)          # single string for your generator prompt
+    ideal = g["ideal_context"]                      
+    context_list = ideal if isinstance(ideal, list) else [ideal]   
+    context_str = "\n\n".join(context_list)         
 
     answer = generator.invoke({
         "standalone_question": g["query"],
         "context": context_str,
     })
-    if hasattr(answer, "content"):                   # AIMessage -> str
+    if hasattr(answer, "content"):                   
         answer = answer.content
 
     test_cases.append(
         LLMTestCase(
             input=g["query"],
             actual_output=answer,
-            retrieval_context=context_list,          # must be a list[str]
+            retrieval_context=context_list,          
         )
     )
 metrics = [

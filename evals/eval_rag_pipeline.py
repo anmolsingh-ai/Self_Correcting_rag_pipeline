@@ -31,18 +31,15 @@ with open(GOLDEN_PATH, encoding="utf-8") as f:
 
 judge = GeminiModel(model=JUDGE_MODEL, api_key=api_key, temperature=0)
 
-# Build your real pipeline (chain + retriever)
 rag, retriever = build_pipeline(str(PDF_PATH), return_retriever=True)
 
 test_cases = []
 for i, g in enumerate(golden_data):
     question = g["query"]
 
-    # 1. What the retriever + reranker actually returns
     docs = retriever.invoke(question)
     retrieval_context = [d.page_content for d in docs]
 
-    # 2. What the full pipeline actually answers (fresh session per question)
     answer = rag.invoke(
         {"input": question},
         config={"configurable": {"session_id": f"eval_{i}"}},
