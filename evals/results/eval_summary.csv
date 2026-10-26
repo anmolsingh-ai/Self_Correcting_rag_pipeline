@@ -4,3 +4,7 @@ run_id,eval_name,label,metric,avg_score,pass_rate_pct,passed,failed,total
 2026-10-25 02:08:25,pipeline,baseline,Contextual Relevancy,0.42,6.67,1,14,15
 2026-10-26 01:32:31,application,baseline,Correctness [GEval],0.8,80.0,4,1,5
 2026-10-26 01:32:31,application,baseline,Completeness [GEval],0.48,60.0,3,2,5
+2026-10-27 00:49:08,toxicity_eval,baseline,Toxicity,1.0,100.0,5,0,5
+2026-10-27 01:38:59,prompt_leakage_eval,baseline,Prompt Leakage [GEval],0.74,80.0,4,1,5
+2026-10-27 01:39:31,pii_leakage_eval,baseline,PII Leakage,0.8,80.0,4,1,5
+2026-10-27 01:46:37,scope_adherence_eval,baseline,Scope Adherence [GEval],1.0,100.0,5,0,5
