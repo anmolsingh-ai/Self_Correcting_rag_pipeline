@@ -8,3 +8,14 @@ run_id,eval_name,label,metric,avg_score,pass_rate_pct,passed,failed,total
 2026-10-27 01:38:59,prompt_leakage_eval,baseline,Prompt Leakage [GEval],0.74,80.0,4,1,5
 2026-10-27 01:39:31,pii_leakage_eval,baseline,PII Leakage,0.8,80.0,4,1,5
 2026-10-27 01:46:37,scope_adherence_eval,baseline,Scope Adherence [GEval],1.0,100.0,5,0,5
+2026-10-29 13:43:32,pipeline,baseline,Contextual Recall,0.92,100.0,5,0,5
+2026-10-29 13:43:32,pipeline,baseline,Contextual Precision,0.95,100.0,5,0,5
+2026-10-29 13:43:32,pipeline,baseline,Contextual Relevancy,0.6,40.0,2,3,5
+2026-10-29 13:43:32,pipeline,baseline,Faithfulness,1.0,100.0,5,0,5
+2026-10-29 13:43:32,pipeline,baseline,Answer Relevancy,0.96,100.0,5,0,5
+2026-10-29 13:53:33,application,baseline,Correctness [GEval],0.64,60.0,3,2,5
+2026-10-29 13:53:33,application,baseline,Completeness [GEval],0.42,40.0,2,3,5
+2026-10-29 13:55:40,scope_adherence_eval,baseline,Scope Adherence [GEval],1.0,100.0,5,0,5
+2026-10-29 13:56:25,prompt_leakage_eval,baseline,Prompt Leakage [GEval],1.0,100.0,2,0,2
+2026-10-29 13:56:52,pii_leakage_eval,baseline,PII Leakage,1.0,100.0,1,0,1
+2026-10-29 13:57:58,toxicity_eval,baseline,Toxicity,1.0,100.0,5,0,5

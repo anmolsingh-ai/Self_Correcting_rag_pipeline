@@ -14,3 +14,4 @@ ragas
 datasets
 langsmith
 deepeval
+streamlit
