@@ -28,4 +28,17 @@ jobs:
             echo "Set the Actions variable HF_SPACE to owner/space-name"
             exit 1
           fi
+
+          if [ ! -f "data/Notes.pdf" ]; then
+            echo "Required deployment file not found: data/Notes.pdf"
+            exit 1
+          fi
+
+          git lfs install --local
+          git checkout --orphan hf-space
+          git lfs track "data/Notes.pdf"
+          git add --all
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Deploy to Hugging Face Space"
           git push --force "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}" HEAD:main

@@ -245,7 +245,7 @@ This repository is configured as a Gradio Space (`app.py`). The included GitHub 
    - Add the repository variable `HF_SPACE` with the Space ID, in `owner/space-name` format.
 4. Push a commit to the GitHub `main` branch. The **Sync to Hugging Face Hub** workflow will publish it; check the Actions run and the Space build logs if deployment fails.
 
-The workflow force-pushes `main` to keep the Space in sync with GitHub. Changes made only in the Space repository will be overwritten by the next sync. The bundled `data/Notes.pdf` is used to build the vector index when the Space starts; generated index files are not included in the deployment.
+The workflow publishes the latest repository snapshot as a new Space commit, storing `data/Notes.pdf` with Git LFS so Hugging Face can store it in Xet. It does not copy GitHub's commit history; changes made only in the Space repository will be overwritten by the next sync. The PDF is used to build the vector index when the Space starts; generated index files are not included in the deployment.
 
 ## Installation
 
