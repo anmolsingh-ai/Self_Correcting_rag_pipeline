@@ -32,9 +32,10 @@ def create_reranked_retriever(
     model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
 ) -> RerankedRetriever:
     """Wrap a retriever with a cross-encoder reranker (CPU-friendly default model)."""
+    # device="cpu": see note in vectore_store.py (ZeroGPU fake-CUDA issue).
     retriever = RerankedRetriever(
         base_retriever=base_retriever,
-        reranker=CrossEncoder(model_name),
+        reranker=CrossEncoder(model_name, device="cpu"),
         top_n=top_n,
     )
     print(f"✓ Reranker ready ({model_name}, top_n={top_n})")

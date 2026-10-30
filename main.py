@@ -9,6 +9,11 @@ from src.reranker import create_reranked_retriever
 from src.conversational_chain import create_conversational_rag_chain
 from langsmith import traceable
 
+# gemini-2.5-flash passed its official shutdown date (Oct 16, 2026).
+# gemini-3.5-flash is Google's recommended replacement.
+LLM_MODEL = "gemini-3.5-flash"
+
+
 @traceable(name="rag_pipeline")
 def build_pipeline(pdf_path: str, return_retriever: bool = False):
     """Build the conversational RAG chain for a PDF."""
@@ -29,7 +34,7 @@ def build_pipeline(pdf_path: str, return_retriever: bool = False):
     retriever = create_reranked_retriever(hybrid, top_n=4)
 
     llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash", google_api_key=api_key, temperature=0
+        model=LLM_MODEL, google_api_key=api_key, temperature=0
     )
     rag_chain, _ = create_conversational_rag_chain(retriever, llm)
     print("✅ Pipeline ready!\n")
@@ -77,6 +82,6 @@ if __name__ == "__main__":
         print(f"⚠️ PDF not found: {pdf_path}\nPlace Notes.pdf in the data folder.")
     else:
         try:
-            chat(build_pipeline(pdf_path,return_retriever=True))
+            chat(build_pipeline(pdf_path))
         except Exception as e:
             print(f"❌ Failed to start the RAG pipeline: {e}")

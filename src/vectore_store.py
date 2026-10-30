@@ -15,7 +15,12 @@ def create_vector_store(
 
     Use force_rebuild=True after changing the PDF, chunk settings or embedding model.
     """
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    # device="cpu": on ZeroGPU Spaces torch pretends a GPU exists, which would
+    # place the model on a GPU that is not actually allocated to this process.
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+    )
 
     def open_store():
         return Chroma(

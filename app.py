@@ -1,17 +1,22 @@
 import os
-import uuid
 import traceback
+import uuid
 
-# --- ZeroGPU support -------------------------------------------------------
+# --- ZeroGPU startup check -------------------------------------------------
+# The Space hardware is ZeroGPU, which refuses to start unless at least one
+# function is decorated with @spaces.GPU. This pipeline does NOT need a GPU
+# (Gemini runs on Google's servers, the MiniLM models are tiny), so we register
+# a placeholder that is never called. `respond` itself runs on normal CPU.
 # `spaces` must be imported BEFORE main.py loads torch / the models.
-# On Hugging Face ZeroGPU it provides the @spaces.GPU decorator; when running
-# locally (no `spaces` package) we fall back to a no-op decorator.
 try:
     import spaces
-    gpu = spaces.GPU
-except ImportError:
-    def gpu(fn):
-        return fn
+except ImportError:  # running locally, no `spaces` package
+    spaces = None
+
+if spaces is not None:
+    @spaces.GPU
+    def _gpu_placeholder():
+        return "ok"
 
 import gradio as gr
 from dotenv import load_dotenv
@@ -30,7 +35,6 @@ from main import build_pipeline
 chain = build_pipeline(os.path.join("data", "Notes.pdf"))
 
 
-@gpu
 def respond(message, history, session_id):
     try:
         resp = chain.invoke(
@@ -39,8 +43,9 @@ def respond(message, history, session_id):
         )
         return str(getattr(resp, "content", resp))
     except Exception as e:
-        traceback.print_exc()  # also goes to the container logs
+        traceback.print_exc()  # full traceback goes to the container logs
         return f"Error: {type(e).__name__}: {e}"
+
 
 with gr.Blocks(title="Self-Correcting RAG Chat") as demo:
     gr.Markdown("# Self-Correcting RAG Chat")
