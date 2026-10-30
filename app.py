@@ -33,7 +33,6 @@ with gr.Blocks(title="Self-Correcting RAG Chat") as demo:
     gr.ChatInterface(
         fn=respond,
         additional_inputs=[session_id],
-        type="messages",
         textbox=gr.Textbox(placeholder="Ask about the document"),
     )
 
