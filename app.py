@@ -1,5 +1,6 @@
 import os
 import uuid
+import traceback
 
 # --- ZeroGPU support -------------------------------------------------------
 # `spaces` must be imported BEFORE main.py loads torch / the models.
@@ -31,12 +32,15 @@ chain = build_pipeline(os.path.join("data", "Notes.pdf"))
 
 @gpu
 def respond(message, history, session_id):
-    resp = chain.invoke(
-        {"input": message},
-        config={"configurable": {"session_id": session_id}},
-    )
-    return str(getattr(resp, "content", resp))
-
+    try:
+        resp = chain.invoke(
+            {"input": message},
+            config={"configurable": {"session_id": session_id}},
+        )
+        return str(getattr(resp, "content", resp))
+    except Exception as e:
+        traceback.print_exc()  # also goes to the container logs
+        return f"Error: {type(e).__name__}: {e}"
 
 with gr.Blocks(title="Self-Correcting RAG Chat") as demo:
     gr.Markdown("# Self-Correcting RAG Chat")

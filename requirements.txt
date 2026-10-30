@@ -11,5 +11,5 @@ rank_bm25
 sentence-transformers 
 langchain-huggingface
 langsmith
-
+spaces
 gradio
