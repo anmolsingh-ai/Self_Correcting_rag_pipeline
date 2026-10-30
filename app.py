@@ -1,8 +1,16 @@
-import importlib.util
-import os, uuid
+import os
+import uuid
 
-if importlib.util.find_spec("spaces") is not None:
-    importlib.import_module("spaces")
+# --- ZeroGPU support -------------------------------------------------------
+# `spaces` must be imported BEFORE main.py loads torch / the models.
+# On Hugging Face ZeroGPU it provides the @spaces.GPU decorator; when running
+# locally (no `spaces` package) we fall back to a no-op decorator.
+try:
+    import spaces
+    gpu = spaces.GPU
+except ImportError:
+    def gpu(fn):
+        return fn
 
 import gradio as gr
 from dotenv import load_dotenv
@@ -21,6 +29,7 @@ from main import build_pipeline
 chain = build_pipeline(os.path.join("data", "Notes.pdf"))
 
 
+@gpu
 def respond(message, history, session_id):
     resp = chain.invoke(
         {"input": message},
@@ -42,4 +51,4 @@ with gr.Blocks(title="Self-Correcting RAG Chat") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(ssr_mode=False)
