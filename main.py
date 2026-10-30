@@ -9,6 +9,7 @@ from src.reranker import create_reranked_retriever
 from src.conversational_chain import create_conversational_rag_chain
 from langsmith import traceable
 
+@traceable(name="rag_pipeline")
 def build_pipeline(pdf_path: str, return_retriever: bool = False):
     """Build the conversational RAG chain for a PDF."""
     load_dotenv()

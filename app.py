@@ -1,20 +1,41 @@
-import os
+import os, uuid
+import gradio as gr
+from dotenv import load_dotenv
 
-from src.load_data import load_and_chunk_pdf
-from src.vectore_store import create_vector_store
-from src.hybrid_retriver import create_hybrid_retriever
-from src.reranker import create_reranked_retriever
+load_dotenv()  # local: reads GEMINI_API_KEY from your .env file
+
+if not os.getenv("GEMINI_API_KEY"):
+    raise RuntimeError(
+        "GEMINI_API_KEY not found. Add it to .env (local) or to your "
+        "host's secrets/environment variables (e.g. Hugging Face Space secrets)."
+    )
+
+from main import build_pipeline
+
+# Built once at startup (replaces @st.cache_resource)
+chain = build_pipeline(os.path.join("data", "Notes.pdf"))
 
 
-pdf_path = os.path.join(os.getcwd(), "data", "Notes.pdf")
-chunks = load_and_chunk_pdf(pdf_path)
-if not chunks:
-    raise ValueError("No document chunks were created from the PDF.")
-print(f"✓ Created {len(chunks)} chunks")
+def respond(message, history, session_id):
+    resp = chain.invoke(
+        {"input": message},
+        config={"configurable": {"session_id": session_id}},
+    )
+    return str(getattr(resp, "content", resp))
 
-import json
 
-# Save
-data = [{"page_content": c.page_content, "metadata": c.metadata} for c in chunks]
-with open("chunks.json", "w", encoding="utf-8") as f:
-    json.dump(data, f, ensure_ascii=False, indent=2, default=str)
+with gr.Blocks(title="Self-Correcting RAG Chat") as demo:
+    gr.Markdown("# Self-Correcting RAG Chat")
+
+    # Per-user session id (replaces st.session_state["sid"])
+    session_id = gr.State(lambda: str(uuid.uuid4()))
+
+    gr.ChatInterface(
+        fn=respond,
+        additional_inputs=[session_id],
+        type="messages",
+        textbox=gr.Textbox(placeholder="Ask about the document"),
+    )
+
+if __name__ == "__main__":
+    demo.launch()

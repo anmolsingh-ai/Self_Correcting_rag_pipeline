@@ -1,3 +1,13 @@
+---
+title: Self-Correcting RAG Chat
+emoji: 💬
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+app_file: app.py
+python_version: "3.10"
+---
+
 # Self-Correcting RAG Pipeline
 
 This repository builds a PDF-based conversational RAG system using LangChain, Chroma, Google Gemini, BM25, and a cross-encoder reranker. The code is organized around a small set of pipeline building blocks and a session-aware conversational chain.
@@ -21,7 +31,7 @@ Self_Correcting_rag_pipeline/
 ├── README.md
 ├── requirements.txt
 ├── main.py                   # Entry point for building the pipeline and chat loop
-├── app.py                    # PDF chunk export utility
+├── app.py                    # Gradio chat interface
 ├── data/
 │   └── Notes.pdf            # Sample PDF used by the pipeline
 ├── chroma_db/               # Persisted Chroma vector index (created automatically)
@@ -223,6 +233,19 @@ Get the key from Google AI Studio:
 - https://aistudio.google.com/app/apikey
 
 The code currently uses `ChatGoogleGenerativeAI` and reads `GEMINI_API_KEY`; the `GOOGLE_API_KEY` variable from older README examples is not required by the current implementation.
+
+## Deploy to Hugging Face Spaces
+
+This repository is configured as a Gradio Space (`app.py`). The included GitHub Actions workflow syncs every push to `main` to your Space.
+
+1. Create a new Space on [Hugging Face](https://huggingface.co/new-space) and select **Gradio** as its SDK.
+2. In the Space's **Settings → Variables and secrets**, add `GEMINI_API_KEY` as a secret. The app will not start without it.
+3. In your GitHub repository, open **Settings → Secrets and variables → Actions**:
+   - Add the repository secret `HF_TOKEN` using a Hugging Face access token with write access to the Space.
+   - Add the repository variable `HF_SPACE` with the Space ID, in `owner/space-name` format.
+4. Push a commit to the GitHub `main` branch. The **Sync to Hugging Face Hub** workflow will publish it; check the Actions run and the Space build logs if deployment fails.
+
+The workflow force-pushes `main` to keep the Space in sync with GitHub. Changes made only in the Space repository will be overwritten by the next sync. The bundled `data/Notes.pdf` is used to build the vector index when the Space starts; generated index files are not included in the deployment.
 
 ## Installation
 

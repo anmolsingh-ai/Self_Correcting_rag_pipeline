@@ -46,3 +46,4 @@ models/
 # Local databases and vector stores
 chroma_db/
 faiss_index/
+.streamlit/secrets.toml

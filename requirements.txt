@@ -10,8 +10,6 @@ pymupdf
 rank_bm25
 sentence-transformers 
 langchain-huggingface
-ragas
-datasets
 langsmith
-deepeval
-streamlit
+
+gradio
