@@ -1,4 +1,9 @@
+import importlib.util
 import os, uuid
+
+if importlib.util.find_spec("spaces") is not None:
+    importlib.import_module("spaces")
+
 import gradio as gr
 from dotenv import load_dotenv
 
